@@ -56,27 +56,27 @@ pub struct ServerBuilder {
 }
 
 impl ServerBuilder {
-    fn tls(&mut self, tls: TLSCert) -> &mut Self {
+    fn tls(mut self, tls: TLSCert) -> Self {
         self.tls = Some(tls);
         self
     }
-    fn hot_reload(&mut self, hot_reload: bool) -> &mut Self {
+    fn hot_reload(mut self, hot_reload: bool) -> Self {
         self.hot_reload = Some(hot_reload);
         self
     }
-    fn timeout(&mut self, timeout: ms) -> &mut Self {
+    fn timeout(mut self, timeout: ms) -> Self {
         self.timeout = Some(timeout);
         self
     }
-    fn build(&mut self) -> Server {
+    fn build(self) -> Server {
         Server {
-            host: self.host.clone(),
+            host: self.host,
             port: self.port,
-            tls: self.tls.clone(),
+            tls: self.tls,
             hot_reload: self.hot_reload.unwrap_or_default(),
             timeout: self.timeout.unwrap_or(2000),
         }
-    } 
+    }
 }
 
 fn main() {
@@ -85,7 +85,7 @@ fn main() {
 
     let cert = TLSCert {
         key: "...".to_owned(),
-        cert: "...".to_owned()
+        cert: "...".to_owned(),
     };
 
     // ---- Without builder pattern ----
@@ -105,28 +105,16 @@ fn main() {
     //     5000
     // );
 
-
     // ----- With builder pattern -----
 
     // Basic server
-    let basic_server = Server::new(
-        host.clone(),
-        port
-    ).build();
+    let basic_server = Server::new(host.clone(), port).build();
 
     // Server with TLS
-    let tls_server = Server::new(
-            host.clone(),
-            port
-        )
-        .tls(cert.clone())
-        .build();
+    let tls_server = Server::new(host.clone(), port).tls(cert.clone()).build();
 
     // Fully configured server
-    let server = Server::new(
-            host.clone(),
-            port
-        )
+    let server = Server::new(host.clone(), port)
         .tls(cert.clone())
         .hot_reload(true)
         .timeout(5000)
