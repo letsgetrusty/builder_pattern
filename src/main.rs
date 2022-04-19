@@ -76,7 +76,7 @@ impl ServerBuilder {
             hot_reload: self.hot_reload.unwrap_or_default(),
             timeout: self.timeout.unwrap_or(2000),
         }
-    } 
+    }
 }
 
 fn main() {
@@ -85,7 +85,7 @@ fn main() {
 
     let cert = TLSCert {
         key: "...".to_owned(),
-        cert: "...".to_owned()
+        cert: "...".to_owned(),
     };
 
     // ---- Without builder pattern ----
@@ -105,28 +105,16 @@ fn main() {
     //     5000
     // );
 
-
     // ----- With builder pattern -----
 
     // Basic server
-    let basic_server = Server::new(
-        host.clone(),
-        port
-    ).build();
+    let basic_server = Server::new(host.clone(), port).build();
 
     // Server with TLS
-    let tls_server = Server::new(
-            host.clone(),
-            port
-        )
-        .tls(cert.clone())
-        .build();
+    let tls_server = Server::new(host.clone(), port).tls(cert.clone()).build();
 
     // Fully configured server
-    let server = Server::new(
-            host.clone(),
-            port
-        )
+    let server = Server::new(host.clone(), port)
         .tls(cert.clone())
         .hot_reload(true)
         .timeout(5000)
