@@ -56,23 +56,23 @@ pub struct ServerBuilder {
 }
 
 impl ServerBuilder {
-    fn tls(&mut self, tls: TLSCert) -> &mut Self {
+    fn tls(mut self, tls: TLSCert) -> Self {
         self.tls = Some(tls);
         self
     }
-    fn hot_reload(&mut self, hot_reload: bool) -> &mut Self {
+    fn hot_reload(mut self, hot_reload: bool) -> Self {
         self.hot_reload = Some(hot_reload);
         self
     }
-    fn timeout(&mut self, timeout: ms) -> &mut Self {
+    fn timeout(mut self, timeout: ms) -> Self {
         self.timeout = Some(timeout);
         self
     }
-    fn build(&mut self) -> Server {
+    fn build(self) -> Server {
         Server {
-            host: self.host.clone(),
+            host: self.host,
             port: self.port,
-            tls: self.tls.clone(),
+            tls: self.tls,
             hot_reload: self.hot_reload.unwrap_or_default(),
             timeout: self.timeout.unwrap_or(2000),
         }
